@@ -3,7 +3,7 @@ services:
   web:
     image: raeel/flask-app:latest  
     ports:
-      - "5000:5000"
+      - "5001:5000"
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
