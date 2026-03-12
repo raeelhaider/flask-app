@@ -61,6 +61,8 @@ def hello():
                 cursor: crosshair;
                 overflow: hidden;
                 transition: background-color 0.8s ease;
+                display: flex;
+                flex-direction: column;
             }}
  
             .grid-bg {{
@@ -78,11 +80,8 @@ def hello():
                 position: fixed;
                 inset: 0;
                 background: repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 2px,
-                    rgba(0,0,0,0.08) 2px,
-                    rgba(0,0,0,0.08) 4px
+                    0deg, transparent, transparent 2px,
+                    rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px
                 );
                 pointer-events: none;
                 z-index: 1;
@@ -110,11 +109,12 @@ def hello():
                 z-index: 10;
                 min-height: 100vh;
                 display: grid;
-                grid-template-rows: auto 1fr auto;
-                padding: 40px;
+                grid-template-rows: auto 1fr auto auto;
+                padding: 40px 40px 0 40px;
                 gap: 20px;
             }}
  
+            /* Top Bar */
             .topbar {{
                 display: flex;
                 justify-content: space-between;
@@ -147,12 +147,13 @@ def hello():
                 text-shadow: 0 0 8px var(--glow);
             }}
  
+            /* Center */
             .center {{
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                gap: 32px;
+                gap: 28px;
                 text-align: center;
             }}
  
@@ -198,6 +199,7 @@ def hello():
                 50% {{ border-color: transparent; }}
             }}
  
+            /* Stats */
             .stats-panel {{
                 display: grid;
                 grid-template-columns: 1fr 1fr 1fr;
@@ -288,12 +290,88 @@ def hello():
                 50%        {{ box-shadow: 0 0 20px rgba(255,212,59,0.5); }}
             }}
  
+            /* ── STACK TICKER ── */
+            .ticker-wrapper {{
+                width: 100%;
+                overflow: hidden;
+                border-top: 1px solid var(--border);
+                border-bottom: 1px solid var(--border);
+                background: rgba(0,255,231,0.02);
+                padding: 14px 0;
+                position: relative;
+                opacity: 0;
+                animation: fadeUp 0.6s 1.3s ease forwards;
+            }}
+ 
+            /* Fade edges */
+            .ticker-wrapper::before,
+            .ticker-wrapper::after {{
+                content: '';
+                position: absolute;
+                top: 0; bottom: 0;
+                width: 120px;
+                z-index: 2;
+                pointer-events: none;
+            }}
+            .ticker-wrapper::before {{
+                left: 0;
+                background: linear-gradient(90deg, var(--bg), transparent);
+            }}
+            .ticker-wrapper::after {{
+                right: 0;
+                background: linear-gradient(270deg, var(--bg), transparent);
+            }}
+ 
+            .ticker-track {{
+                display: flex;
+                gap: 0;
+                width: max-content;
+                animation: ticker 25s linear infinite;
+            }}
+            .ticker-track:hover {{ animation-play-state: paused; }}
+ 
+            @keyframes ticker {{
+                from {{ transform: translateX(0); }}
+                to   {{ transform: translateX(-50%); }}
+            }}
+ 
+            .ticker-item {{
+                display: inline-flex;
+                align-items: center;
+                gap: 10px;
+                padding: 0 40px;
+                font-family: 'Share Tech Mono', monospace;
+                font-size: 0.8rem;
+                letter-spacing: 3px;
+                color: var(--dim);
+                text-transform: uppercase;
+                white-space: nowrap;
+                transition: color 0.3s;
+            }}
+            .ticker-item:hover {{
+                color: var(--glow);
+                text-shadow: 0 0 10px var(--glow);
+            }}
+ 
+            .ticker-icon {{
+                font-size: 1rem;
+            }}
+ 
+            .ticker-sep {{
+                display: inline-flex;
+                align-items: center;
+                padding: 0 10px;
+                color: var(--border);
+                font-size: 1rem;
+            }}
+ 
+            /* Bottom bar */
             .bottombar {{
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 border-top: 1px solid var(--border);
-                padding-top: 16px;
+                padding: 16px 0 24px 0;
                 font-family: 'Share Tech Mono', monospace;
                 font-size: 0.7rem;
                 color: var(--dim);
@@ -349,10 +427,11 @@ def hello():
         <div class="corner corner-br"></div>
  
         <div class="hud">
+            <!-- Top Bar -->
             <div class="topbar">
                 <div>
                     <div class="sys-label">// DevOps Terminal v2.0</div>
-                    <div class="sys-label" style="margin-top:4px; opacity:0.5;">Flask · Redis · Docker · Jenkins</div>
+                    <div class="sys-label" style="margin-top:4px; opacity:0.5;">Powered by Cloud &amp; DevOps Stack</div>
                 </div>
                 <div class="datetime">
                     <div id="date"></div>
@@ -360,6 +439,7 @@ def hello():
                 </div>
             </div>
  
+            <!-- Center -->
             <div class="center">
                 <div>
                     <div class="greeting-sub">// SYSTEM ONLINE — IDENTITY CONFIRMED</div>
@@ -389,6 +469,55 @@ def hello():
                 {"<div class='milestone'>" + milestone + "</div>" if milestone else ""}
             </div>
  
+            <!-- Animated Stack Ticker -->
+            <div class="ticker-wrapper">
+                <div class="ticker-track" id="ticker">
+                    <!-- First set -->
+                    <span class="ticker-item"><span class="ticker-icon">🐍</span> Python 3.11</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">🌶️</span> Flask Framework</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">🗄️</span> Redis Cache</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">🐳</span> Docker Container</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">🔧</span> Jenkins CI/CD</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">📦</span> Docker Compose</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">🐙</span> GitHub</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">🏔️</span> Docker Hub</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">☁️</span> Cloud Deployed</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">⚡</span> DevOps Pipeline</span>
+                    <span class="ticker-sep">◆</span>
+                    <!-- Duplicate set for seamless loop -->
+                    <span class="ticker-item"><span class="ticker-icon">🐍</span> Python 3.11</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">🌶️</span> Flask Framework</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">🗄️</span> Redis Cache</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">🐳</span> Docker Container</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">🔧</span> Jenkins CI/CD</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">📦</span> Docker Compose</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">🐙</span> GitHub</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">🏔️</span> Docker Hub</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">☁️</span> Cloud Deployed</span>
+                    <span class="ticker-sep">◆</span>
+                    <span class="ticker-item"><span class="ticker-icon">⚡</span> DevOps Pipeline</span>
+                    <span class="ticker-sep">◆</span>
+                </div>
+            </div>
+ 
+            <!-- Bottom Bar -->
             <div class="bottombar">
                 <div><span class="status-dot"></span>ALL SYSTEMS NOMINAL</div>
                 <div>[ CLICK ANYWHERE TO SHIFT REALITY ]</div>
@@ -397,6 +526,7 @@ def hello():
         </div>
  
         <script>
+            // Live clock
             function updateClock() {{
                 const now = new Date();
                 document.getElementById('clock').textContent = now.toTimeString().split(' ')[0];
@@ -407,6 +537,7 @@ def hello():
             updateClock();
             setInterval(updateClock, 1000);
  
+            // Background palettes
             const palettes = [
                 {{ bg: '#020b14', glow: '#00ffe7', glow2: '#0077ff', grid: 'rgba(0,255,231,0.04)', border: 'rgba(0,255,231,0.15)' }},
                 {{ bg: '#0d0014', glow: '#bf5fff', glow2: '#ff2d78', grid: 'rgba(191,95,255,0.04)', border: 'rgba(191,95,255,0.15)' }},
