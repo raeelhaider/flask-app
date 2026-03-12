@@ -1,7 +1,8 @@
 version: "3.8"
 services:
   web:
-    build: .
+  #we have used build . to get the latest image from jenkins pipeline
+    build: .               
     image: raeel/flask-app:latest 
     ports:
       - "5000:5000"
