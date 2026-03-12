@@ -2,7 +2,8 @@ version: "3.8"
 services:
   web:
   #we have used build . to get the latest image from jenkins pipeline
-    build: .               
+    # Now as we have given our Dockerhub credentials so image can now be build from Dockerhub
+    # build: .               
     image: raeel/flask-app:latest 
     ports:
       - "5000:5000"
