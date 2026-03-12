@@ -523,6 +523,7 @@ def hello():
                     <span class="stack-badge">🏔️ Docker Hub</span>
                     <span class="stack-badge">☁️ Cloud Deployed</span>
                     <span class="stack-badge">⚡ DevOps Pipeline</span>
+                    <span class="stack-badge">📊 Psutil</span>
                 </div>
             </div>
  
@@ -583,4 +584,3 @@ def hello():
  
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
- 
