@@ -61,8 +61,6 @@ def hello():
                 cursor: crosshair;
                 overflow: hidden;
                 transition: background-color 0.8s ease;
-                display: flex;
-                flex-direction: column;
             }}
  
             .grid-bg {{
@@ -110,7 +108,7 @@ def hello():
                 min-height: 100vh;
                 display: grid;
                 grid-template-rows: auto 1fr auto auto;
-                padding: 40px 40px 0 40px;
+                padding: 40px;
                 gap: 20px;
             }}
  
@@ -202,10 +200,10 @@ def hello():
             /* Stats */
             .stats-panel {{
                 display: grid;
-                grid-template-columns: 1fr 1fr 1fr;
+                grid-template-columns: 1fr 1fr;
                 gap: 16px;
                 width: 100%;
-                max-width: 700px;
+                max-width: 500px;
                 opacity: 0;
                 animation: fadeUp 0.7s 0.8s ease forwards;
             }}
@@ -290,79 +288,55 @@ def hello():
                 50%        {{ box-shadow: 0 0 20px rgba(255,212,59,0.5); }}
             }}
  
-            /* ── STACK TICKER ── */
-            .ticker-wrapper {{
+            /* ── STATIC STACK SECTION ── */
+            .stack-section {{
                 width: 100%;
-                overflow: hidden;
                 border-top: 1px solid var(--border);
                 border-bottom: 1px solid var(--border);
-                background: rgba(0,255,231,0.02);
-                padding: 14px 0;
-                position: relative;
+                padding: 16px 0;
                 opacity: 0;
                 animation: fadeUp 0.6s 1.3s ease forwards;
             }}
  
-            /* Fade edges */
-            .ticker-wrapper::before,
-            .ticker-wrapper::after {{
-                content: '';
-                position: absolute;
-                top: 0; bottom: 0;
-                width: 120px;
-                z-index: 2;
-                pointer-events: none;
-            }}
-            .ticker-wrapper::before {{
-                left: 0;
-                background: linear-gradient(90deg, var(--bg), transparent);
-            }}
-            .ticker-wrapper::after {{
-                right: 0;
-                background: linear-gradient(270deg, var(--bg), transparent);
-            }}
- 
-            .ticker-track {{
-                display: flex;
-                gap: 0;
-                width: max-content;
-                animation: ticker 25s linear infinite;
-            }}
-            .ticker-track:hover {{ animation-play-state: paused; }}
- 
-            @keyframes ticker {{
-                from {{ transform: translateX(0); }}
-                to   {{ transform: translateX(-50%); }}
-            }}
- 
-            .ticker-item {{
-                display: inline-flex;
-                align-items: center;
-                gap: 10px;
-                padding: 0 40px;
+            .stack-label {{
                 font-family: 'Share Tech Mono', monospace;
-                font-size: 0.8rem;
-                letter-spacing: 3px;
+                font-size: 0.6rem;
+                letter-spacing: 4px;
                 color: var(--dim);
+                text-align: center;
+                margin-bottom: 14px;
                 text-transform: uppercase;
-                white-space: nowrap;
-                transition: color 0.3s;
-            }}
-            .ticker-item:hover {{
-                color: var(--glow);
-                text-shadow: 0 0 10px var(--glow);
             }}
  
-            .ticker-icon {{
-                font-size: 1rem;
+            .stack-grid {{
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 10px;
+                max-width: 860px;
+                margin: 0 auto;
             }}
  
-            .ticker-sep {{
+            .stack-badge {{
                 display: inline-flex;
                 align-items: center;
-                padding: 0 10px;
-                color: var(--border);
-                font-size: 1rem;
+                gap: 8px;
+                padding: 6px 16px;
+                border: 1px solid var(--border);
+                border-radius: 999px;
+                background: var(--panel);
+                font-family: 'Share Tech Mono', monospace;
+                font-size: 0.72rem;
+                letter-spacing: 2px;
+                color: var(--text);
+                text-transform: uppercase;
+                transition: border-color 0.3s, box-shadow 0.3s, color 0.3s;
+            }}
+            .stack-badge:hover {{
+                border-color: var(--glow);
+                color: var(--glow);
+                box-shadow: 0 0 12px rgba(0,255,231,0.15);
+                text-shadow: 0 0 8px var(--glow);
             }}
  
             /* Bottom bar */
@@ -371,7 +345,7 @@ def hello():
                 justify-content: space-between;
                 align-items: center;
                 border-top: 1px solid var(--border);
-                padding: 16px 0 24px 0;
+                padding-top: 16px;
                 font-family: 'Share Tech Mono', monospace;
                 font-size: 0.7rem;
                 color: var(--dim);
@@ -455,65 +429,29 @@ def hello():
                         <div class="stat-unit">CONNECTIONS</div>
                     </div>
                     <div class="stat-box">
-                        <div class="stat-label">// Redis Host</div>
-                        <div class="stat-value" style="font-size:1.1rem; padding-top:6px;">{redis_host}</div>
-                        <div class="stat-unit">PORT {redis_port}</div>
-                    </div>
-                    <div class="stat-box">
                         <div class="stat-label">// App Status</div>
                         <div class="stat-value" style="font-size:1rem; padding-top:6px; color:#40c057; -webkit-text-fill-color:#40c057; text-shadow: 0 0 12px #40c057;">ONLINE</div>
-                        <div class="stat-unit">FLASK · 5000</div>
+                        <div class="stat-unit">RUNNING</div>
                     </div>
                 </div>
  
                 {"<div class='milestone'>" + milestone + "</div>" if milestone else ""}
             </div>
  
-            <!-- Animated Stack Ticker -->
-            <div class="ticker-wrapper">
-                <div class="ticker-track" id="ticker">
-                    <!-- First set -->
-                    <span class="ticker-item"><span class="ticker-icon">🐍</span> Python 3.11</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">🌶️</span> Flask Framework</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">🗄️</span> Redis Cache</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">🐳</span> Docker Container</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">🔧</span> Jenkins CI/CD</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">📦</span> Docker Compose</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">🐙</span> GitHub</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">🏔️</span> Docker Hub</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">☁️</span> Cloud Deployed</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">⚡</span> DevOps Pipeline</span>
-                    <span class="ticker-sep">◆</span>
-                    <!-- Duplicate set for seamless loop -->
-                    <span class="ticker-item"><span class="ticker-icon">🐍</span> Python 3.11</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">🌶️</span> Flask Framework</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">🗄️</span> Redis Cache</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">🐳</span> Docker Container</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">🔧</span> Jenkins CI/CD</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">📦</span> Docker Compose</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">🐙</span> GitHub</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">🏔️</span> Docker Hub</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">☁️</span> Cloud Deployed</span>
-                    <span class="ticker-sep">◆</span>
-                    <span class="ticker-item"><span class="ticker-icon">⚡</span> DevOps Pipeline</span>
-                    <span class="ticker-sep">◆</span>
+            <!-- Static Stack Section -->
+            <div class="stack-section">
+                <div class="stack-label">// Built With</div>
+                <div class="stack-grid">
+                    <span class="stack-badge">🐍 Python 3.11</span>
+                    <span class="stack-badge">🌶️ Flask</span>
+                    <span class="stack-badge">🗄️ Redis</span>
+                    <span class="stack-badge">🐳 Docker</span>
+                    <span class="stack-badge">📦 Docker Compose</span>
+                    <span class="stack-badge">🔧 Jenkins CI/CD</span>
+                    <span class="stack-badge">🐙 GitHub</span>
+                    <span class="stack-badge">🏔️ Docker Hub</span>
+                    <span class="stack-badge">☁️ Cloud Deployed</span>
+                    <span class="stack-badge">⚡ DevOps Pipeline</span>
                 </div>
             </div>
  
@@ -576,3 +514,4 @@ def hello():
  
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
+ 
