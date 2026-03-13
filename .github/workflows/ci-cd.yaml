@@ -38,7 +38,7 @@ jobs:
           script:
             cd /home/ubuntu
 
-            if [ ! -d "flask-app"]; then 
+            if [ ! -d "flask-app" ]; then 
               git clone https://github.com/raeelhaider/flask-app.git
             fi
 
